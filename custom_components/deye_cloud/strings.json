@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "title": "Connect to Deye Cloud",
+        "title": "Connect to Deye Cloud HA",
         "description": "Enter your Deye developer application credentials and choose the region where your Deye Cloud account is hosted.",
         "data": {
           "region": "Region",
@@ -15,13 +15,17 @@
       "station": {
         "title": "Choose a station",
         "description": "Select the solar station to add to Home Assistant.",
-        "data": {"station_id": "Station"}
+        "data": {
+          "station_id": "Station"
+        }
       }
     },
     "error": {
       "cannot_connect": "Could not authenticate or load stations. Check credentials, application access, and region.",
       "no_stations": "No Deye Cloud stations were found for this account."
     },
-    "abort": {"already_configured": "This station is already configured."}
+    "abort": {
+      "already_configured": "This station is already configured."
+    }
   }
 }
