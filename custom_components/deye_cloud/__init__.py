@@ -24,7 +24,7 @@ class DeyeCloudCoordinator(DataUpdateCoordinator[dict]):
         super().__init__(
             hass,
             _LOGGER,
-            name=f"Deye Cloud {station_id}",
+            name=f"Deye Cloud HA {station_id}",
             update_interval=DEFAULT_SCAN_INTERVAL,
             always_update=False,
         )
@@ -75,7 +75,7 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up a configured Deye Cloud account."""
+    """Set up a configured Deye Cloud HA account."""
     # Entries created by earlier builds may only contain the selected region.
     # Resolve and persist the corresponding API URL before creating the client.
     base_url = entry.data.get("base_url")
