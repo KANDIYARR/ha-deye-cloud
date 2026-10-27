@@ -12,7 +12,7 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import DeyeCloudApi, DeyeCloudApiError
-from .const import CONF_REGION, DEFAULT_SCAN_INTERVAL, DOMAIN, PLATFORMS, REGIONS
+from .const import CONF_EMAIL, CONF_REGION, DEFAULT_SCAN_INTERVAL, DOMAIN, PLATFORMS, REGIONS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -34,6 +34,7 @@ class DeyeCloudCoordinator(DataUpdateCoordinator[dict]):
         self._last_inventory = None
         self._last_alerts = 0.0
         self._alerts: dict[str, list[dict]] = {}
+        self._alerts_supported = True
 
     async def _async_update_data(self) -> dict:
         try:
@@ -56,13 +57,29 @@ class DeyeCloudCoordinator(DataUpdateCoordinator[dict]):
                             values[str(key)] = {"value": point.get("value"), "unit": point.get("unit")}
                     device_data[sn] = {**device, "measurements": values}
             station = await self.api.station_latest(self.station_id)
-            if now - self._last_alerts >= 300:
+            if self._alerts_supported and now - self._last_alerts >= 300:
                 end = int(time.time())
                 start = end - 24 * 60 * 60
                 alerts: dict[str, list[dict]] = {}
                 for serial in serials:
-                    alerts[serial] = await self.api.device_alerts(serial, start, end)
-                self._alerts = alerts
+                    try:
+                        alerts[serial] = await self.api.device_alerts(serial, start, end)
+                    except DeyeCloudApiError as err:
+                        if err.status_code == 404:
+                            self._alerts_supported = False
+                            self._alerts = {}
+                            _LOGGER.warning(
+                                "Deye Cloud does not provide the device-alert endpoint in this region; alert sensors will be unavailable"
+                            )
+                            break
+                        _LOGGER.warning(
+                            "Could not retrieve recent Deye device alerts for %s: %s",
+                            serial,
+                            err,
+                        )
+                        continue
+                else:
+                    self._alerts = alerts
                 self._last_alerts = now
             return {"devices": self._devices, "device_data": device_data, "station": station, "alerts": self._alerts}
         except DeyeCloudApiError as err:
@@ -83,11 +100,32 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         region = entry.data.get(CONF_REGION)
         base_url = REGIONS.get(region)
         if base_url is None:
+            account_email = str(entry.data.get(CONF_EMAIL, "")).casefold()
+            candidate_urls = set()
+            for sibling in hass.config_entries.async_entries(DOMAIN):
+                if sibling.entry_id == entry.entry_id:
+                    continue
+                sibling_email = str(sibling.data.get(CONF_EMAIL, "")).casefold()
+                if account_email and sibling_email and account_email != sibling_email:
+                    continue
+                sibling_url = sibling.data.get("base_url") or REGIONS.get(
+                    sibling.data.get(CONF_REGION)
+                )
+                if sibling_url:
+                    candidate_urls.add(sibling_url.rstrip("/"))
+            if len(candidate_urls) == 1:
+                base_url = candidate_urls.pop()
+        if base_url is None:
             raise ConfigEntryNotReady(
-                "The saved Deye Cloud region is missing or unsupported. Remove and re-add the integration."
+                "The saved Deye Cloud region is missing or unsupported. Remove and re-add this entry to select its region."
             )
+        region = next(
+            (name for name, url in REGIONS.items() if url.rstrip("/") == base_url.rstrip("/")),
+            region,
+        )
         hass.config_entries.async_update_entry(
-            entry, data={**entry.data, "base_url": base_url}
+            entry,
+            data={**entry.data, CONF_REGION: region, "base_url": base_url},
         )
 
     api = DeyeCloudApi(
