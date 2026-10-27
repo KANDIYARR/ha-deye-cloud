@@ -1,4 +1,4 @@
-"""Config flow for Deye Cloud."""
+"""Config flow for Deye Cloud HA."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from .const import CONF_APP_ID, CONF_APP_SECRET, CONF_EMAIL, CONF_PASSWORD, CONF
 
 
 class DeyeCloudConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Configure Deye Cloud credentials and select a plant."""
+    """Configure Deye Cloud HA credentials and select a plant."""
 
     VERSION = 1
 
