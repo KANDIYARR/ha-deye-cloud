@@ -5,6 +5,9 @@
     "@KANDIYARR"
   ],
   "config_flow": true,
+  "categories": [
+    "energy.solar_batteries"
+  ],
   "documentation": "https://github.com/KANDIYARR/ha-deye-cloud",
   "integration_type": "hub",
   "iot_class": "cloud_polling",
