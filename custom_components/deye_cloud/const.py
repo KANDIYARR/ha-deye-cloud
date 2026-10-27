@@ -1,4 +1,4 @@
-"""Constants for the Deye Cloud integration."""
+"""Constants for the Deye Cloud HA integration."""
 
 from datetime import timedelta
 
