@@ -37,7 +37,7 @@ the account.
 | **Station summary** | Solar generation, consumption, grid exchange, battery power and state of charge, irradiance, and last update when returned by the API. |
 | **Device telemetry** | Dynamically created sensors for the measurement keys and units returned by each inverter, battery/BMS, or other device. |
 | **Grid availability** | Estimates grid presence from live grid-voltage readings and reports unknown when no usable voltage is available. |
-| **Device health** | Online status, device state, recent alerts, and cloud telemetry freshness. |
+| **Device health** | Online status, device state, recent alerts when the selected region exposes the alert endpoint, and cloud telemetry freshness. |
 | **API request handling** | Cached authentication token, serialized and spaced requests, batches of up to 10 devices, and retry backoff for transient errors. |
 
 This integration uses Deye Cloud and does not connect directly to the inverter over a local network. Available values depend on device model, BMS, logger, firmware, account permissions, and Deye's API response. Grid status is inferred from cloud voltage telemetry; it may be delayed and is not a safety or protection feature.
