@@ -8,10 +8,11 @@ import time
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import DeyeCloudApi, DeyeCloudApiError
-from .const import DEFAULT_SCAN_INTERVAL, DOMAIN, PLATFORMS
+from .const import CONF_REGION, DEFAULT_SCAN_INTERVAL, DOMAIN, PLATFORMS, REGIONS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -75,9 +76,23 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up a configured Deye Cloud account."""
+    # Entries created by earlier builds may only contain the selected region.
+    # Resolve and persist the corresponding API URL before creating the client.
+    base_url = entry.data.get("base_url")
+    if not base_url:
+        region = entry.data.get(CONF_REGION)
+        base_url = REGIONS.get(region)
+        if base_url is None:
+            raise ConfigEntryNotReady(
+                "The saved Deye Cloud region is missing or unsupported. Remove and re-add the integration."
+            )
+        hass.config_entries.async_update_entry(
+            entry, data={**entry.data, "base_url": base_url}
+        )
+
     api = DeyeCloudApi(
         hass,
-        entry.data["base_url"],
+        base_url,
         entry.data["app_id"],
         entry.data["app_secret"],
         entry.data["email"],
