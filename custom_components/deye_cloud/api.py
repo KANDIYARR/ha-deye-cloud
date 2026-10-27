@@ -19,6 +19,10 @@ _LOGGER = logging.getLogger(__name__)
 class DeyeCloudApiError(Exception):
     """Raised for authentication, transport, and API errors."""
 
+    def __init__(self, message: str, *, status_code: int | None = None) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+
 
 class DeyeCloudApi:
     """Authenticated client with token caching and request throttling."""
@@ -76,6 +80,15 @@ class DeyeCloudApi:
                             wait = float(retry_after) if retry_after and retry_after.isdigit() else min(60, 2 ** attempt + random.random())
                             await asyncio.sleep(wait)
                             continue
+                    if response.status == 404:
+                        raise DeyeCloudApiError(
+                            f"Deye Cloud endpoint not found: {path}", status_code=404
+                        )
+                    if 400 <= response.status < 500:
+                        raise DeyeCloudApiError(
+                            f"Deye Cloud request was rejected with HTTP {response.status}",
+                            status_code=response.status,
+                        )
                     response.raise_for_status()
                     payload = await response.json(content_type=None)
             except (ClientError, asyncio.TimeoutError, ValueError) as err:
