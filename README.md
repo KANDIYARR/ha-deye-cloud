@@ -21,9 +21,15 @@ The available measurements vary by inverter, battery/BMS, logger, and firmware. 
 
 1. In Home Assistant, open **HACS → Integrations**.
 2. Open the menu in the upper-right corner and choose **Custom repositories**.
-3. Add `https://github.com/KANDIYARR/ha-deye-cloud` and select **Integration** as the category.
+3. Add this repository URL and select **Integration** as the category.
 4. Find **Deye Cloud** in HACS and install it.
 5. Restart Home Assistant.
+
+Once this project is published, the repository URL will be:
+
+```text
+https://github.com/KANDIYARR/ha-deye-cloud
+```
 
 ### Manual installation
 
