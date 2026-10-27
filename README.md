@@ -2,7 +2,7 @@
   <strong>DEYE CLOUD · HOME ASSISTANT</strong>
 </p>
 
-<h1 align="center">Deye Cloud</h1>
+<h1 align="center">Deye Cloud HA</h1>
 
 <p align="center">
   <strong>Your Deye hybrid inverter and battery, connected to Home Assistant.</strong><br>
@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=KANDIYARR&amp;repository=ha-deye-cloud&amp;category=integration"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Add Deye Cloud to HACS"></a>
+  <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=KANDIYARR&amp;repository=ha-deye-cloud&amp;category=integration"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Add Deye Cloud HA to HACS"></a>
   <a href="https://www.hacs.dev/docs/faq/custom_repositories/"><img src="https://img.shields.io/badge/HACS-Custom_repository-41BDF5?style=flat-square" alt="HACS custom repository"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-555?style=flat-square" alt="MIT license"></a>
 </p>
@@ -56,7 +56,7 @@ Supported API regions in this integration: **India, Europe, Americas, and Asia P
 
 ### HACS · Recommended
 
-[![Add Deye Cloud to HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=KANDIYARR&repository=ha-deye-cloud&category=integration)
+[![Add Deye Cloud HA to HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=KANDIYARR&repository=ha-deye-cloud&category=integration)
 
 Use the button above, or add the repository manually:
 
@@ -67,9 +67,9 @@ Use the button above, or add the repository manually:
    https://github.com/KANDIYARR/ha-deye-cloud
    ```
 
-3. Find **Deye Cloud** and download it.
+3. Find **Deye Cloud HA** and download it.
 4. **Restart Home Assistant.**
-5. Go to **Settings → Devices & services → Add integration → Deye Cloud**.
+5. Go to **Settings → Devices & services → Add integration → Deye Cloud HA**.
 6. Select your region, enter your Deye application credentials and Deye Cloud account email and password, then choose a station.
 
 Create an application in the [Deye Developer Portal](https://developer.deyecloud.com/app). The selected region must match your Deye Cloud account.
@@ -93,7 +93,7 @@ Create an application in the [Deye Developer Portal](https://developer.deyecloud
    ```
 
 3. Restart Home Assistant.
-4. Add **Deye Cloud** from **Settings → Devices & services** and configure your account.
+4. Add **Deye Cloud HA** from **Settings → Devices & services** and configure your account.
 
 </details>
 
